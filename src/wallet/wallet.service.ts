@@ -65,12 +65,9 @@ export class WalletService {
       user: userId,
     });
 
-    if (!wallet) {
-      wallet = await this.walletModel.create({
-        user: userId,
-        balance: 0,
-      });
-    }
+ if (!wallet) {
+  throw new NotFoundException('Wallet not found');
+}
 
     wallet.balance += amount;
     wallet.lastDepositAt = new Date();
