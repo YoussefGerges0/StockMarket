@@ -15,6 +15,7 @@ import { Wallet, WalletSchema } from '../wallet/schemas/wallet.schema';
       { name: Wallet.name, schema: WalletSchema },
     ]),
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET || 'secret_key',
       signOptions: { expiresIn: '1d' },
     }),
