@@ -3,12 +3,18 @@ import { AuthenticationService } from './authentication.service';
 import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
   ) {}
+
+  @Post('register')
+register(@Body() body: RegisterDto) {
+  return this.authenticationService.register(body);
+}
 
   @Post('send-register-otp')
   sendRegisterOtp(@Body() body: SendRegisterOtpDto) {

@@ -1,18 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import {BadRequestException,Injectable,NotFoundException,UnauthorizedException,} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { Otp, OtpDocument } from './schemas/otp.schema';
-import {
-  User,
-  UserDocument,
-  UserStatus,
-} from '../users/schemas/user.schema';
+import { RegisterDto } from './dto/register.dto';
+import {User,UserDocument,UserStatus} from '../users/schemas/user.schema';
 import { Wallet, WalletDocument } from '../wallet/schemas/wallet.schema';
 import * as bcrypt from 'bcrypt';
 
@@ -30,7 +22,22 @@ export class AuthenticationService {
 
     private readonly jwtService: JwtService,
   ) {}
+private isAtLeast18(dateOfBirth: Date): boolean {
+  const today = new Date();
 
+  let age = today.getFullYear() - dateOfBirth.getFullYear();
+
+  const monthDifference = today.getMonth() - dateOfBirth.getMonth();
+
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < dateOfBirth.getDate())
+  ) {
+    age--;
+  }
+
+  return age >= 18;
+}
   private generateOtp(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
@@ -40,6 +47,67 @@ export class AuthenticationService {
     expiresAt.setMinutes(expiresAt.getMinutes() + 10);
     return expiresAt;
   }
+
+async register(body: RegisterDto) {
+  const normalizedEmail = body.email.toLowerCase().trim();
+  const normalizedNationalID = body.nationalID.trim();
+
+  const dateOfBirth = new Date(body.dateOfBirth);
+
+  if (!this.isAtLeast18(dateOfBirth)) {
+    throw new BadRequestException('You must be at least 18 years old to register');
+  }
+
+  const existingEmail = await this.userModel.findOne({
+    email: normalizedEmail,
+  });
+
+  if (existingEmail) {
+    throw new BadRequestException('Email already exists');
+  }
+
+  const existingNationalID = await this.userModel.findOne({
+    nationalID: normalizedNationalID,
+  });
+
+  if (existingNationalID) {
+    throw new BadRequestException('National ID already exists');
+  }
+
+  const user = await this.userModel.create({
+    name: body.name.trim(),
+    email: normalizedEmail,
+    nationalID: normalizedNationalID,
+    dateOfBirth,
+  });
+
+  await this.otpModel.deleteMany({
+    email: normalizedEmail,
+    usedAt: null,
+  });
+
+  const code = this.generateOtp();
+
+  await this.otpModel.create({
+    email: normalizedEmail,
+    code,
+    expiresAt: this.getOtpExpirationDate(),
+  });
+
+  return {
+    message: 'Registration created successfully. OTP sent to email',
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      nationalID: user.nationalID,
+      dateOfBirth: user.dateOfBirth,
+      status: user.status,
+      isEmailVerified: user.isEmailVerified,
+    },
+    code, // remove later when real email sending is ready
+  };
+}
 
   async sendRegisterOtp(email: string) {
     const normalizedEmail = email.toLowerCase().trim();
