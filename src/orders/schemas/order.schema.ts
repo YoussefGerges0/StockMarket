@@ -3,12 +3,13 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type OrderDocument = HydratedDocument<Order>;
 
-export enum OrderSide {
+export enum OrderType {
   BUY = 'buy',
   SELL = 'sell',
 }
 
 export enum OrderStatus {
+  PENDING='pending',
   EXECUTED = 'executed',
   REJECTED = 'rejected',
 }
@@ -43,10 +44,10 @@ export class Order {
 
   @Prop({
     type: String,
-    enum: OrderSide,
+    enum: OrderType,
     required: true,
   })
-  side!: OrderSide;
+  orderType!: OrderType;
 
   @Prop({
     type: Number,
@@ -93,6 +94,6 @@ export const OrderSchema = SchemaFactory.createForClass(Order);
 
 OrderSchema.index({ user: 1, createdAt: -1 });
 OrderSchema.index({ stock: 1, createdAt: -1 });
-OrderSchema.index({ stock: 1, side: 1, createdAt: -1 });
-OrderSchema.index({ side: 1, createdAt: -1 });
+OrderSchema.index({ stock: 1, orderType: 1, createdAt: -1 });
+OrderSchema.index({ orderType: 1, createdAt: -1 });
 OrderSchema.index({ status: 1 });
