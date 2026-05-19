@@ -1,4 +1,4 @@
-import {BadRequestException,Injectable,NotFoundException,UnauthorizedException,} from '@nestjs/common';
+import {BadRequestException,Injectable,NotFoundException,UnauthorizedException,ForbiddenException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
@@ -226,6 +226,10 @@ async register(body: RegisterDto) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+      if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
+        throw new ForbiddenException('Your account is not allowed to login');
+      }
+    
     if (!user.password) {
       throw new BadRequestException(
         'Please verify your email and create a password first',
