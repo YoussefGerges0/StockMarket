@@ -10,6 +10,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { StocksModule } from './stocks/stocks.module';
 import { WalletModule } from './wallet/wallet.module';
 import { OrdersModule } from './orders/orders.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 function validateConfig(config: Record<string, unknown>) {
   if (!config.MONGO_URI) {
@@ -53,6 +54,7 @@ function validateConfig(config: Record<string, unknown>) {
     StocksModule,
     WalletModule,
     OrdersModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
