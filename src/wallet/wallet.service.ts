@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Types,PipelineStage} from 'mongoose';
 import { Wallet, WalletDocument } from './schemas/wallet.schema';
 import {
   WalletTransaction,
@@ -13,7 +13,7 @@ import {
   WalletTransactionStatus,
   WalletTransactionType,
 } from './schemas/wallet-transaction.schema';
-import { User, UserDocument, UserRole } from '../users/schemas/user.schema';
+import { User, UserDocument,UserRole,UserStatus } from '../users/schemas/user.schema';
 
 type BearerUser = {
   sub: string;
@@ -35,7 +35,7 @@ export class WalletService {
   ) {}
 
   private checkUserAccess(userId: Types.ObjectId, bearer: BearerUser) {
-    if (bearer.role !== UserRole.ADMIN && bearer.sub !== userId.toString()) {
+    if (bearer.role !== UserRole.SADMIN &&bearer.role !== UserRole.SUPPORT && bearer.role !== UserRole.ADMIN && bearer.role !== UserRole.ANALYST && bearer.sub !== userId.toString()) {
       throw new ForbiddenException('You are not allowed to access this wallet');
     }
   }
@@ -54,45 +54,60 @@ export class WalletService {
     return wallet;
   }
 
-  async deposit(userId: Types.ObjectId, amount: number, bearer: BearerUser) {
-    this.checkUserAccess(userId, bearer);
-
-    if (amount <= 0) {
-      throw new BadRequestException('Amount must be greater than 0');
-    }
-
-    let wallet = await this.walletModel.findOne({
-      user: userId,
-    });
-
- if (!wallet) {
-  throw new NotFoundException('Wallet not found');
-}
-
-    wallet.balance += amount;
-    wallet.lastDepositAt = new Date();
-
-    await wallet.save();
-
-    const transaction = await this.walletTransactionModel.create({
-      user: userId,
-      wallet: wallet._id,
-      type: WalletTransactionType.DEPOSIT,
-      amount,
-      status: WalletTransactionStatus.COMPLETED,
-      description: 'Wallet deposit',
-    });
-
-    return {
-      message: 'Deposit completed successfully',
-      wallet,
-      transaction,
-    };
+async deposit(userId: Types.ObjectId, amount: number, bearer: BearerUser) {
+  if (bearer.sub !== userId.toString()) {
+    throw new ForbiddenException('You are not allowed to access this wallet');
   }
 
-  async requestWithdrawal(userId: Types.ObjectId,amount: number,bearer: BearerUser) {
-    this.checkUserAccess(userId, bearer);
+  const user = await this.userModel.findById(userId);
 
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
+    throw new ForbiddenException('Your account is not allowed to make deposits');
+  }
+
+  if (amount <= 0) {
+    throw new BadRequestException('Amount must be greater than 0');
+  }
+
+  const wallet = await this.walletModel.findOne({
+    user: userId,
+  });
+
+  if (!wallet) {
+    throw new NotFoundException('Wallet not found');
+  }
+
+  const transaction = await this.walletTransactionModel.create({
+    user: userId,
+    wallet: wallet._id,
+    type: WalletTransactionType.DEPOSIT,
+    amount,
+    status: WalletTransactionStatus.PENDING,
+    description: 'Deposit request pending CMS approval',
+  });
+
+  return {
+    message: 'Deposit request created successfully',
+    wallet,
+    transaction,
+  };
+}
+
+  async requestWithdrawal(userId: Types.ObjectId,amount: number,bearer: BearerUser) {
+        if (bearer.sub !== userId.toString()) {
+      throw new ForbiddenException('You are not allowed to access this wallet');
+    }
+      const user = await this.userModel.findById(userId);
+        if (!user) {
+    throw new NotFoundException('User not found');
+  }
+      if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
+    throw new ForbiddenException('Your account is not allowed to make deposits');
+  }
     if (amount <= 0) {
       throw new BadRequestException('Amount must be greater than 0');
     }
@@ -109,8 +124,8 @@ export class WalletService {
       throw new BadRequestException('Insufficient wallet balance');
     }
 
-    const holdingPeriodMs = 48 * 60 * 60 * 1000;
-
+    const holdingPeriodMs = 1;
+//const holdingPeriodMs = 48 * 60 * 60 * 1000;
     if (
       wallet.lastDepositAt &&
       Date.now() - wallet.lastDepositAt.getTime() < holdingPeriodMs
@@ -164,10 +179,189 @@ export class WalletService {
       }
     }
 
-    return this.walletTransactionModel
-      .find(filter)
-      .sort({
+    return this.walletTransactionModel.find(filter).sort({
         createdAt: -1,
       });
   }
+  async getPendingWalletTransactions(bearer: BearerUser) {
+  if (
+    bearer.role !== UserRole.SADMIN &&
+    bearer.role !== UserRole.ADMIN &&
+    bearer.role !== UserRole.SUPPORT
+
+  ) {
+    throw new ForbiddenException(
+      'You are not allowed to access pending withdrawals',
+    );
+  }
+
+  const pipeline: PipelineStage[] = [
+  {
+    '$match': {
+      'status': 'pending'
+    }
+  }, {
+    '$sort': {
+      'createdAt': 1
+    }
+  }
+]
+
+  return this.walletTransactionModel.aggregate(pipeline).exec();
+}
+
+async updateWalletTransactionStatus(transactionId: Types.ObjectId,status: WalletTransactionStatus,bearer: BearerUser) {
+  if (
+    bearer.role !== UserRole.SADMIN &&
+    bearer.role !== UserRole.ADMIN &&
+    bearer.role !== UserRole.SUPPORT
+  ) {
+    throw new ForbiddenException(
+      'You are not allowed to update wallet transaction status',
+    );
+  }
+
+  if (status !== WalletTransactionStatus.COMPLETED &&status !== WalletTransactionStatus.REJECTED) {
+    throw new BadRequestException(
+      'Status must be either completed or rejected',
+    );
+  }
+
+  const transaction = await this.walletTransactionModel.findById(transactionId);
+
+  if (!transaction) {
+    throw new NotFoundException('Wallet transaction not found');
+  }
+
+  if (transaction.status !== WalletTransactionStatus.PENDING) {
+    throw new BadRequestException('Only pending transactions can be updated');
+  }
+
+  const wallet = await this.walletModel.findById(transaction.wallet);
+
+  if (!wallet) {
+    throw new NotFoundException('Wallet not found');
+  }
+
+  transaction.status = status;
+  transaction.reviewedBy = new Types.ObjectId(bearer.sub);
+  transaction.reviewedAt = new Date();
+
+  if (transaction.type === WalletTransactionType.DEPOSIT) {
+    if (status === WalletTransactionStatus.COMPLETED) {
+      wallet.balance += transaction.amount;
+      wallet.lastDepositAt = new Date();
+      await wallet.save();
+
+      transaction.description = 'Deposit approved';
+      await transaction.save();
+
+      return {
+        message: 'Deposit approved successfully and amount added to wallet',
+        wallet,
+        transaction,
+      };
+    }
+
+    transaction.description = 'Deposit rejected';
+    await transaction.save();
+
+    return {
+      message: 'Deposit rejected successfully',
+      wallet,
+      transaction,
+    };
+  }
+
+  if (transaction.type === WalletTransactionType.WITHDRAWAL) {
+    if (status === WalletTransactionStatus.COMPLETED) {
+      transaction.description = 'Withdrawal approved';
+      await transaction.save();
+
+      return {
+        message: 'Withdrawal approved successfully',
+        wallet,
+        transaction,
+      };
+    }
+
+    wallet.balance += transaction.amount;
+    await wallet.save();
+
+    transaction.description = 'Withdrawal rejected';
+    await transaction.save();
+
+    return {
+      message: 'Withdrawal rejected and amount returned to wallet',
+      wallet,
+      transaction,
+    };
+  }
+
+  throw new BadRequestException('This transaction type cannot be reviewed');
+}
+
+
+
+
+
+async adjustWalletBalance(userId: Types.ObjectId,amount: number,note: string,bearer: BearerUser) {
+  if (
+    bearer.role !== UserRole.SADMIN &&
+    bearer.role !== UserRole.ADMIN
+  ) {
+    throw new ForbiddenException(
+      'You are not allowed to manually adjust wallet balance',
+    );
+  }
+
+  if (amount === 0) {
+    throw new BadRequestException('Amount cannot be 0');
+  }
+
+  if (!note || note.trim() === '') {
+    throw new BadRequestException('Justification note is required');
+  }
+
+  const user = await this.userModel.findById(userId);
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const wallet = await this.walletModel.findOne({
+    user: userId,
+  });
+
+  if (!wallet) {
+    throw new NotFoundException('Wallet not found');
+  }
+
+  const newBalance = wallet.balance + amount;
+
+  if (newBalance < 0) {
+    throw new BadRequestException('Wallet balance cannot become negative');
+  }
+
+  wallet.balance = newBalance;
+  await wallet.save();
+
+  const transaction = await this.walletTransactionModel.create({
+    user: userId,
+    wallet: wallet._id,
+    type: WalletTransactionType.ADJUSTMENT,
+    amount: Math.abs(amount),
+    status: WalletTransactionStatus.COMPLETED,
+    description: note.trim(),
+    reviewedBy: bearer.sub,
+    reviewedAt: new Date(),
+  });
+
+  return {
+    message: 'Wallet balance adjusted successfully',
+    wallet,
+    transaction,
+  };
+}
+
 }
