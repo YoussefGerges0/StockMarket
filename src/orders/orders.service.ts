@@ -2,14 +2,15 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ForbiddenException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
   Order,
   OrderDocument,
-  OrderSide,
   OrderStatus,
+  OrderType,
 } from './schemas/order.schema';
 import { Stock, StockDocument } from '../stocks/schemas/stock.schema';
 import { Wallet, WalletDocument } from '../wallet/schemas/wallet.schema';
@@ -21,6 +22,12 @@ import {
 } from '../wallet/schemas/wallet-transaction.schema';
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { toObjectId } from '../common/utils/object-id.utils';
+import { User,UserDocument,UserRole,UserStatus } from '../users/schemas/user.schema';
+type BearerUser = {
+  sub: string;
+  email: string;
+  role: string;
+};
 
 @Injectable()
 export class OrdersService {
@@ -37,15 +44,35 @@ export class OrdersService {
     @InjectModel(WalletTransaction.name)
     private readonly walletTransactionModel: Model<WalletTransactionDocument>,
 
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
+
     private readonly portfolioService: PortfolioService,
   ) {}
 
-  async buyStock(userId: string, ticker: string, quantity: number) {
+
+
+    private checkUserAccess(userId: Types.ObjectId, bearer: BearerUser) {
+      if (bearer.role !== UserRole.SADMIN &&bearer.role !== UserRole.SUPPORT && bearer.role !== UserRole.ADMIN && bearer.role !== UserRole.ANALYST && bearer.sub !== userId.toString()) {
+        throw new ForbiddenException('You are not allowed to access ');
+      }
+    }
+
+  
+  async buyStock(bearer: BearerUser, ticker: string, quantity: number) {
     if (quantity <= 0) {
       throw new BadRequestException('Quantity must be greater than 0');
     }
 
-    const userObjectId = toObjectId(userId);
+      const user = await this.userModel.findById(bearer.sub);
+            if (!user) {
+        throw new NotFoundException('User not found');
+      }
+          if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
+        throw new ForbiddenException('Your account is not allowed to buy stock');
+      }
+
+    const userObjectId = toObjectId(bearer.sub);
     const normalizedTicker = ticker.toUpperCase().trim();
 
     const stock = await this.stockModel.findOne({
@@ -90,7 +117,7 @@ export class OrdersService {
       user: userObjectId,
       stock: stock._id,
       ticker: stock.ticker,
-      side: OrderSide.BUY,
+      orderType: OrderType.BUY,
       quantity,
       priceAtExecution,
       totalValue,
@@ -115,12 +142,20 @@ export class OrdersService {
     };
   }
 
-  async sellStock(userId: string, ticker: string, quantity: number) {
+  async sellStock(bearer: BearerUser, ticker: string, quantity: number) {
     if (quantity <= 0) {
       throw new BadRequestException('Quantity must be greater than 0');
     }
 
-    const userObjectId = toObjectId(userId);
+          const user = await this.userModel.findById(bearer.sub);
+            if (!user) {
+        throw new NotFoundException('User not found');
+      }
+          if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
+        throw new ForbiddenException('Your account is not allowed to sell stock');
+      }
+    
+    const userObjectId = toObjectId(bearer.sub);
     const normalizedTicker = ticker.toUpperCase().trim();
 
     const stock = await this.stockModel.findOne({
@@ -156,7 +191,7 @@ export class OrdersService {
       user: userObjectId,
       stock: stock._id,
       ticker: stock.ticker,
-      side: OrderSide.SELL,
+      orderType: OrderType.SELL,
       quantity,
       priceAtExecution,
       totalValue,
@@ -182,7 +217,8 @@ export class OrdersService {
     };
   }
 
-  async getUserOrders(userId: Types.ObjectId) {
+  async getUserOrders(userId: Types.ObjectId,bearer: BearerUser) {
+     this.checkUserAccess(userId, bearer);
     return this.orderModel
       .find({
         user: userId,
@@ -192,13 +228,15 @@ export class OrdersService {
       });
   }
 
-  async getOrderById(id: Types.ObjectId) {
-    const order = await this.orderModel.findById(id);
+async getOrderById(id: Types.ObjectId, bearer: BearerUser) {
+  const order = await this.orderModel.findById(id);
 
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
-
-    return order;
+  if (!order) {
+    throw new NotFoundException('Order not found');
   }
+
+  this.checkUserAccess(order.user, bearer);
+
+  return order;
+}
 }
