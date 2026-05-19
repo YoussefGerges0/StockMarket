@@ -4,6 +4,7 @@ import { HydratedDocument } from 'mongoose';
 export type UserDocument = HydratedDocument<User>;
 
 export enum UserRole {
+  SADMIN="Super-Administrator",
   ADMIN = 'Administrator',
   ANALYST = 'Analyst',
   SUPPORT = 'Support Agent',
@@ -66,21 +67,22 @@ export class User {
   @Prop({ type: String, default: null })
   identityRejectionReason!: string;
 
-  @Prop({ type: String, default: null })
-  suspensionReason!: string;
+  @Prop({ type: [String], default: [] })
+  suspensionReason!: string[];
 
-  @Prop({
-    type: Date,
-    default: null,
-  })
-  suspendedAt!: Date;
+  @Prop({ type: [Date], default: [] })
+  suspendedAt!: Date[];
 
   @Prop({ type: Date, default: null })
   lastLoginAt!: Date;
 
   @Prop({ type: Boolean, default: false })
   temporaryPassword!: boolean;
+
+  @Prop({ type: Date, default: null })
+  temporaryPasswordExpiresAt!: Date ;
 }
+
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
