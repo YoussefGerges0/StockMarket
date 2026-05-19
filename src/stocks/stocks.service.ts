@@ -48,27 +48,49 @@ export class StocksService {
     };
   }
 
-  async getAllStocks() {
-    return this.stockModel.find().sort({ createdAt: -1 });
+async getAllStocks() {
+  return this.stockModel
+    .find()
+    .populate({
+      path: 'priceHistory',
+      options: {
+        sort: { changedAt: 1 },
+      },
+    })
+    .sort({ createdAt: -1 });
+}
+
+async getListedStocks() {
+  return this.stockModel
+    .find({
+      isListed: true,
+    })
+    .populate({
+      path: 'priceHistory',
+      options: {
+        sort: { changedAt: 1 },
+      },
+    })
+    .sort({ createdAt: -1 });
+}
+
+async getStockById(id: Types.ObjectId) {
+  const stock = await this.stockModel
+    .findById(id)
+    .populate({
+      path: 'priceHistory',
+      options: {
+        sort: { changedAt: 1 },
+      },
+    });
+
+  if (!stock) {
+    throw new NotFoundException('Stock not found');
   }
 
-  async getListedStocks() {
-    return this.stockModel
-      .find({
-        isListed: true,
-      })
-      .sort({ createdAt: -1 });
-  }
+  return stock;
+}
 
-  async getStockById(id: Types.ObjectId) {
-    const stock = await this.stockModel.findById(id);
-
-    if (!stock) {
-      throw new NotFoundException('Stock not found');
-    }
-
-    return stock;
-  }
 
   async updateStock(
     id: Types.ObjectId,
@@ -144,4 +166,5 @@ export class StocksService {
       stock,
     };
   }
+
 }

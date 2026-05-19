@@ -7,6 +7,8 @@ export type StockDocument = HydratedDocument<Stock>;
   timestamps: true,
   versionKey: false,
   id: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 })
 export class Stock {
   @Prop({ type: String, required: true, uppercase: true, trim: true })
@@ -29,6 +31,14 @@ export class Stock {
 }
 
 export const StockSchema = SchemaFactory.createForClass(Stock);
+
+
+StockSchema.virtual('priceHistory', {
+  ref: 'StockPriceHistory',
+  localField: '_id',
+  foreignField: 'stock',
+});
+
 
 StockSchema.index({ ticker: 1 }, { unique: true });
 StockSchema.index({ sector: 1 });
