@@ -41,11 +41,11 @@ export class PortfolioService {
     private readonly portfolioPositionModel: Model<PortfolioPositionDocument>,
   ) {}
 
-  private checkUserAccess(userId: Types.ObjectId, bearer: BearerUser) {
-    if (bearer.role !== UserRole.ADMIN && bearer.sub !== userId.toString()) {
-      throw new ForbiddenException('You are not allowed to access this portfolio');
+    private checkUserAccess(userId: Types.ObjectId, bearer: BearerUser) {
+      if (bearer.role !== UserRole.SADMIN &&bearer.role !== UserRole.SUPPORT && bearer.role !== UserRole.ADMIN &&  bearer.role !== UserRole.ANALYST && bearer.sub !== userId.toString()) {
+        throw new ForbiddenException('You are not allowed to access ');
+      }
     }
-  }
 
   async getUserPortfolio(userId: Types.ObjectId, bearer: BearerUser) {
     this.checkUserAccess(userId, bearer);
