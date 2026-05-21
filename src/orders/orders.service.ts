@@ -23,6 +23,8 @@ import {
 import { PortfolioService } from '../portfolio/portfolio.service';
 import { toObjectId } from '../common/utils/object-id.utils';
 import { User,UserDocument,UserRole,UserStatus } from '../users/schemas/user.schema';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '../notifications/schemas/notification.schema';
 type BearerUser = {
   sub: string;
   email: string;
@@ -48,6 +50,7 @@ export class OrdersService {
     private readonly userModel: Model<UserDocument>,
 
     private readonly portfolioService: PortfolioService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
 
@@ -68,6 +71,9 @@ export class OrdersService {
             if (!user) {
         throw new NotFoundException('User not found');
       }
+        if(user.role!=="investor"){
+          throw new ForbiddenException('Your account is not allowed to buy stock');
+        }
           if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
         throw new ForbiddenException('Your account is not allowed to buy stock');
       }
@@ -135,6 +141,20 @@ export class OrdersService {
       description: `Bought ${quantity} shares of ${stock.ticker}`,
     });
 
+await this.notificationsService.createNotification(
+  userObjectId,
+  user.email,
+  user.name,
+  NotificationType.TRADE_EXECUTION,
+  'Buy order executed',
+  `Your buy order for ${quantity} shares of ${ticker} was executed successfully.`,
+  `<html>
+    <body>
+      <h2>Buy Order Executed</h2>
+      <p>Your buy order for ${quantity} shares of ${ticker} was executed successfully.</p>
+    </body>
+  </html>`,
+);
     return {
       message: 'Buy order executed successfully',
       order,
@@ -151,6 +171,10 @@ export class OrdersService {
             if (!user) {
         throw new NotFoundException('User not found');
       }
+              if(user.role!=="investor"){
+          throw new ForbiddenException('Your account is not allowed to sell stock');
+        }
+
           if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
         throw new ForbiddenException('Your account is not allowed to sell stock');
       }
@@ -208,6 +232,22 @@ export class OrdersService {
       status: WalletTransactionStatus.COMPLETED,
       description: `Sold ${quantity} shares of ${stock.ticker}`,
     });
+
+
+await this.notificationsService.createNotification(
+  userObjectId,
+  user.email,
+  user.name,
+  NotificationType.TRADE_EXECUTION,
+  'Sell order executed',
+  `Your sell order for ${quantity} shares of ${ticker} was executed successfully.`,
+  `<html>
+    <body>
+      <h2>Sell Order Executed</h2>
+      <p>Your sell order for ${quantity} shares of ${ticker} was executed successfully.</p>
+    </body>
+  </html>`,
+);
 
     return {
       message: 'Sell order executed successfully',

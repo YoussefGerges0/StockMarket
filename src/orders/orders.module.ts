@@ -8,6 +8,7 @@ import { Wallet, WalletSchema } from '../wallet/schemas/wallet.schema';
 import {WalletTransaction,WalletTransactionSchema,} from '../wallet/schemas/wallet-transaction.schema';
 import { PortfolioModule } from '../portfolio/portfolio.module';
 import { User, UserSchema } from '../users/schemas/user.schema';
+import { NotificationsModule } from '../notifications/notifications.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -24,6 +25,7 @@ import { User, UserSchema } from '../users/schemas/user.schema';
       {name: User.name,schema: UserSchema}
     ]),
     PortfolioModule,
+    NotificationsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService],

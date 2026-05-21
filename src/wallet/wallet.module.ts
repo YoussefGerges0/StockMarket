@@ -6,7 +6,7 @@ import { Wallet, WalletSchema } from './schemas/wallet.schema';
 import {WalletTransaction,WalletTransactionSchema} from './schemas/wallet-transaction.schema';
 import { User, UserSchema } from '../users/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
-
+import { NotificationsModule } from '../notifications/notifications.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -23,6 +23,7 @@ import { JwtModule } from '@nestjs/jwt';
     expiresIn:'1h',
   },
 }),
+NotificationsModule,
   ],
   controllers: [WalletController],
   providers: [WalletService],

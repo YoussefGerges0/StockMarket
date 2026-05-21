@@ -14,6 +14,8 @@ import {
   WalletTransactionType,
 } from './schemas/wallet-transaction.schema';
 import { User, UserDocument,UserRole,UserStatus } from '../users/schemas/user.schema';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '../notifications/schemas/notification.schema';
 
 type BearerUser = {
   sub: string;
@@ -32,6 +34,7 @@ export class WalletService {
 
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   private checkUserAccess(userId: Types.ObjectId, bearer: BearerUser) {
@@ -58,7 +61,8 @@ async deposit(userId: Types.ObjectId, amount: number, bearer: BearerUser) {
   if (bearer.sub !== userId.toString()) {
     throw new ForbiddenException('You are not allowed to access this wallet');
   }
-
+  if(bearer.role !="investor"){
+    throw new ForbiddenException('You are not allowed to deposit');}
   const user = await this.userModel.findById(userId);
 
   if (!user) {
@@ -101,6 +105,10 @@ async deposit(userId: Types.ObjectId, amount: number, bearer: BearerUser) {
         if (bearer.sub !== userId.toString()) {
       throw new ForbiddenException('You are not allowed to access this wallet');
     }
+
+      if(bearer.role !="investor"){
+    throw new ForbiddenException('You are not allowed to deposit');}
+
       const user = await this.userModel.findById(userId);
         if (!user) {
     throw new NotFoundException('User not found');
@@ -124,8 +132,8 @@ async deposit(userId: Types.ObjectId, amount: number, bearer: BearerUser) {
       throw new BadRequestException('Insufficient wallet balance');
     }
 
-    const holdingPeriodMs = 1;
-//const holdingPeriodMs = 48 * 60 * 60 * 1000;
+    //const holdingPeriodMs = 1;
+const holdingPeriodMs = 48 * 60 * 60 * 1000;
     if (
       wallet.lastDepositAt &&
       Date.now() - wallet.lastDepositAt.getTime() < holdingPeriodMs
@@ -253,6 +261,25 @@ async updateWalletTransactionStatus(transactionId: Types.ObjectId,status: Wallet
       wallet.lastDepositAt = new Date();
       await wallet.save();
 
+      const user = await this.userModel.findById(transaction.user);
+      if (!user) {
+    throw new NotFoundException('User not found');}
+
+ await this.notificationsService.createNotification(
+  transaction.user,
+  user.email,
+  user.name,
+  NotificationType.WALLET_CREDIT,
+  'Wallet credited',
+  `Your wallet has been credited with ${transaction.amount}.`,
+  `<html>
+    <body>
+      <h2>Wallet Credited</h2>
+      <p>Your wallet has been credited with ${transaction.amount}.</p>
+    </body>
+  </html>`,
+);
+
       transaction.description = 'Deposit approved';
       await transaction.save();
 
@@ -353,7 +380,7 @@ async adjustWalletBalance(userId: Types.ObjectId,amount: number,note: string,bea
     amount: Math.abs(amount),
     status: WalletTransactionStatus.COMPLETED,
     description: note.trim(),
-    reviewedBy: bearer.sub,
+    reviewedBy: new Types.ObjectId(bearer.sub),
     reviewedAt: new Date(),
   });
 
@@ -362,6 +389,26 @@ async adjustWalletBalance(userId: Types.ObjectId,amount: number,note: string,bea
     wallet,
     transaction,
   };
+}
+
+
+async getAdjustmentTransactions(bearer: BearerUser) {
+  if (
+    bearer.role !== UserRole.SADMIN &&
+    bearer.role !== UserRole.ADMIN
+  ) {
+    throw new ForbiddenException(
+      'You are not allowed to access adjustment transactions',
+    );
+  }
+
+  return this.walletTransactionModel
+    .find({
+      type: WalletTransactionType.ADJUSTMENT,
+    })
+    .sort({
+      createdAt: -1,
+    });
 }
 
 }
