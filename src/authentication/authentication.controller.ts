@@ -4,7 +4,10 @@ import { SendRegisterOtpDto } from './dto/send-register-otp.dto';
 import { VerifyRegisterOtpDto } from './dto/verify-register-otp.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { UseGuards } from '@nestjs/common';
 
+@UseGuards(ThrottlerGuard)
 @Controller('authentication')
 export class AuthenticationController {
   constructor(

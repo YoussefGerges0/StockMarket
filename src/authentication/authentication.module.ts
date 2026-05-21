@@ -6,7 +6,7 @@ import { AuthenticationController } from './authentication.controller';
 import { Otp, OtpSchema } from './schemas/otp.schema';
 import { User, UserSchema } from '../users/schemas/user.schema';
 import { Wallet, WalletSchema } from '../wallet/schemas/wallet.schema';
-
+import { NotificationsModule } from '../notifications/notifications.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -19,6 +19,7 @@ import { Wallet, WalletSchema } from '../wallet/schemas/wallet.schema';
       secret: process.env.JWT_SECRET || 'secret_key',
       signOptions: { expiresIn: '1h' },
     }),
+    NotificationsModule,
   ],
   controllers: [AuthenticationController],
   providers: [AuthenticationService],
