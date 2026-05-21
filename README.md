@@ -3,4 +3,5 @@ Then go to settings -> SMTP & API -> API Keys& MCP -> Generate API key -> put th
 
 import all required files from docs into postman and MongoDB compass
 
+install the node modules by using this command: npm install
 run the server by using this command in the terminal : npm run start:dev
