@@ -9,19 +9,16 @@ import { Stock, StockDocument } from './schemas/stock.schema';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 import { toObjectId } from '../common/utils/object-id.utils';
-import {
-  StockPriceHistory,
-  StockPriceHistoryDocument,
-} from './schemas/stock-price-history.schema';
-
+import {StockPriceHistory,StockPriceHistoryDocument} from './schemas/stock-price-history.schema';
+import { PriceAlertsService } from '../price-alerts/price-alerts.service';
 @Injectable()
 export class StocksService {
   constructor(
     @InjectModel(StockPriceHistory.name)
     private readonly stockPriceHistoryModel: Model<StockPriceHistoryDocument>,
 
-    @InjectModel(Stock.name)
-    private readonly stockModel: Model<StockDocument>,
+    @InjectModel(Stock.name)private readonly stockModel: Model<StockDocument>,
+    private readonly priceAlertsService: PriceAlertsService,
   ) {}
 
   async createStock(body: CreateStockDto) {
@@ -129,16 +126,22 @@ async getStockById(id: Types.ObjectId) {
       throw new NotFoundException('Stock not found');
     }
 
-    if (newPrice !== undefined && newPrice !== oldPrice) {
-      await this.stockPriceHistoryModel.create({
-        stock: stock._id,
-        ticker: stock.ticker,
-        oldPrice,
-        newPrice,
-        changedBy: changedBy ? toObjectId(changedBy) : null,
-        changedAt: new Date(),
-      });
-    }
+if (newPrice !== undefined && newPrice !== oldPrice) {
+  await this.stockPriceHistoryModel.create({
+    stock: stock._id,
+    ticker: stock.ticker,
+    oldPrice,
+    newPrice,
+    changedBy: changedBy ? toObjectId(changedBy) : null,
+    changedAt: new Date(),
+  });
+
+  await this.priceAlertsService.checkPriceAlerts(
+    stock._id,
+    oldPrice,
+    newPrice,
+  );
+}
 
     return {
       message: 'Stock updated successfully',
