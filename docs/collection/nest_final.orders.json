@@ -1,0 +1,125 @@
+[{
+  "_id": {
+    "$oid": "6a0b7344043098c9017007b6"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "quantity": 1,
+  "priceAtExecution": 15,
+  "totalValue": 15,
+  "status": "executed",
+  "realizedProfitLoss": null,
+  "rejectionReason": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:15:00.474Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:15:00.474Z"
+  },
+  "orderType": "buy"
+},
+{
+  "_id": {
+    "$oid": "6a0b7383043098c9017007b8"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "quantity": 1,
+  "priceAtExecution": 15,
+  "totalValue": 15,
+  "status": "executed",
+  "realizedProfitLoss": null,
+  "rejectionReason": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:16:03.267Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:16:03.267Z"
+  },
+  "orderType": "buy"
+},
+{
+  "_id": {
+    "$oid": "6a0b749c043098c9017007bb"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "quantity": 1,
+  "priceAtExecution": 11,
+  "totalValue": 11,
+  "status": "executed",
+  "realizedProfitLoss": null,
+  "rejectionReason": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:20:44.961Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:20:44.961Z"
+  },
+  "orderType": "buy"
+},
+{
+  "_id": {
+    "$oid": "6a0eaf22e0cc5f74a11618e0"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "stock": {
+    "$oid": "6a0e7bebc042ec3db9f1b2bd"
+  },
+  "ticker": "QWE",
+  "orderType": "buy",
+  "quantity": 1,
+  "priceAtExecution": 7,
+  "totalValue": 7,
+  "status": "executed",
+  "realizedProfitLoss": null,
+  "rejectionReason": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:07:14.298Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:07:14.298Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eaf8ce0cc5f74a11618e3"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "stock": {
+    "$oid": "6a0e7bebc042ec3db9f1b2bd"
+  },
+  "ticker": "QWE",
+  "orderType": "sell",
+  "quantity": 1,
+  "priceAtExecution": 7,
+  "totalValue": 7,
+  "status": "executed",
+  "realizedProfitLoss": 0,
+  "rejectionReason": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:09:00.672Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:09:00.672Z"
+  }
+}]

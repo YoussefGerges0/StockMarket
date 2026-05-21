@@ -1,0 +1,292 @@
+[{
+  "_id": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "name": "Tester test",
+  "email": "test@example.com",
+  "nationalID": "123456",
+  "dateOfBirth": {
+    "$date": "2005-05-14T00:00:00.000Z"
+  },
+  "password": "$2b$10$S/hN/q7KGPDRJg8exp/fH.45hFtH9GvwOw9ha9/Uip.bYrBAJ1Z7C",
+  "role": "investor",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "identityRejectionReason": null,
+  "suspensionReason": [
+    "Suspended: testing",
+    "Reinstated: testing"
+  ],
+  "suspendedAt": [
+    {
+      "$date": "2026-05-20T09:15:31.734Z"
+    },
+    {
+      "$date": "2026-05-20T09:16:27.429Z"
+    }
+  ],
+  "lastLoginAt": {
+    "$date": "2026-05-20T09:36:27.186Z"
+  },
+  "temporaryPassword": false,
+  "createdAt": {
+    "$date": "2026-05-18T03:50:27.387Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T09:36:27.190Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d1e21e45669c5a015c1ae"
+  },
+  "name": "Youssef",
+  "email": "youssef.gerges@isae.edu.lb",
+  "nationalID": "124124124",
+  "dateOfBirth": {
+    "$date": "2005-05-14T00:00:00.000Z"
+  },
+  "password": "$2b$10$DrwxdBRY65Uh4G0UX8aAZO8cffEUlypUKu8E84RS.PmDuHQZvaUNC",
+  "role": "investor",
+  "isEmailVerified": true,
+  "isFirstLogin": true,
+  "status": "active",
+  "identityVerificationStatus": "pending",
+  "identityRejectionReason": null,
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": null,
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-20T02:36:17.695Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T02:37:07.876Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d65349f87c112d71fc7f6"
+  },
+  "name": "Omar",
+  "email": "omar@example.com",
+  "dateOfBirth": null,
+  "password": "$2b$10$VyiBfTqzVknsKWAvhULUd.ziqZgvPiuQmWbt9ah3LBl7Kz5t.PaMK",
+  "role": "Super-Administrator",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": {
+    "$date": "2026-05-21T07:36:01.382Z"
+  },
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-20T07:39:32.410Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:36:01.382Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d7165cc27609e17c49e72"
+  },
+  "name": "Leila",
+  "email": "leila@example.com",
+  "nationalID": "111",
+  "dateOfBirth": null,
+  "password": "$2b$10$6IfGued.VG/QWKNAP4CH2uiHYmsG2DzDRw4XHwJazV70A1lM.woOe",
+  "role": "analyst",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": {
+    "$date": "2026-05-20T08:35:52.747Z"
+  },
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-20T08:31:33.431Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T08:35:52.747Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d7165cc27609e17c49e73"
+  },
+  "name": "Jason",
+  "email": "jason@example.com",
+  "nationalID": "222",
+  "dateOfBirth": null,
+  "password": "$2b$10$JScyyMJDAWxOcir6PwdK5uxPAxHHOyzejr4K9BQ/q7OfGf5sgDytK",
+  "role": "support-agent",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": {
+    "$date": "2026-05-20T08:50:55.197Z"
+  },
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-20T08:31:33.512Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T08:50:55.206Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d77bd376756c59bdf08e0"
+  },
+  "name": "Youssef",
+  "email": "yussefgerges@gmail.com",
+  "dateOfBirth": null,
+  "password": "$2b$10$pMmUPPzpeWBm92rn5z/ZN.9JKmMIgm7ZBgEY1mrg2HRu31vxn9m3q",
+  "role": "analyst",
+  "isEmailVerified": true,
+  "isFirstLogin": true,
+  "status": "active",
+  "identityVerificationStatus": "pending",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": null,
+  "temporaryPassword": true,
+  "temporaryPasswordExpiresAt": {
+    "$date": "2026-05-21T08:58:37.544Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-20T08:58:37.554Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T08:58:37.554Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d7959376756c59bdf08e1"
+  },
+  "name": "Youssef",
+  "email": "gergesyoussef02@gmail.com",
+  "dateOfBirth": null,
+  "password": "$2b$10$0YO1Erk/lMimJEQ78Kj7wu.1Pv0L03L6ikHIlDCj/UBAwgVxyvgEC",
+  "role": "support-agent",
+  "isEmailVerified": true,
+  "isFirstLogin": true,
+  "status": "active",
+  "identityVerificationStatus": "rejected",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": null,
+  "temporaryPassword": true,
+  "temporaryPasswordExpiresAt": {
+    "$date": "2026-05-21T09:20:48.847Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-20T09:05:29.381Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T09:26:39.069Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "name": "adam",
+  "email": "adam@example.com",
+  "nationalID": "333",
+  "dateOfBirth": null,
+  "password": "$2b$10$v0Pbjm9vmM8aeXNojizKm.5dF7NJf.ykXAR1Q4u96iQbJ4mlIzAl6",
+  "role": "investor",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": {
+    "$date": "2026-05-21T07:11:31.523Z"
+  },
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T03:11:47.473Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:11:31.524Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eb10be0cc5f74a11618e6"
+  },
+  "name": "yousef12314",
+  "email": "youusefgerges@isae.edu.lb",
+  "nationalID": "5214125124",
+  "dateOfBirth": {
+    "$date": "2005-05-14T00:00:00.000Z"
+  },
+  "password": null,
+  "role": "investor",
+  "isEmailVerified": false,
+  "isFirstLogin": true,
+  "status": "pending",
+  "identityVerificationStatus": "pending",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": null,
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:15:23.968Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:15:23.968Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eb1e8e0cc5f74a11618e9"
+  },
+  "name": "yousef12314",
+  "email": "youusefgerges@gmail.com",
+  "nationalID": "472726263463",
+  "dateOfBirth": {
+    "$date": "2005-05-14T00:00:00.000Z"
+  },
+  "password": "$2b$10$WI6YNZ6LXCj4xs48OXfgSehvK8joAoC5jWP0nnl36Tx9IBpeMh0r6",
+  "role": "investor",
+  "isEmailVerified": true,
+  "isFirstLogin": false,
+  "status": "active",
+  "identityVerificationStatus": "approved",
+  "suspensionReason": [],
+  "suspendedAt": [],
+  "lastLoginAt": {
+    "$date": "2026-05-21T07:34:33.442Z"
+  },
+  "temporaryPassword": false,
+  "temporaryPasswordExpiresAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:19:04.081Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:34:33.443Z"
+  }
+}]
