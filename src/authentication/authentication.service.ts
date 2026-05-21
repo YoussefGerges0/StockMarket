@@ -4,9 +4,11 @@ import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { Otp, OtpDocument } from './schemas/otp.schema';
 import { RegisterDto } from './dto/register.dto';
-import {User,UserDocument,UserStatus} from '../users/schemas/user.schema';
+import {User,UserDocument,UserStatus,IdentityVerificationStatus} from '../users/schemas/user.schema';
 import { Wallet, WalletDocument } from '../wallet/schemas/wallet.schema';
 import * as bcrypt from 'bcrypt';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '../notifications/schemas/notification.schema';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,6 +23,7 @@ export class AuthenticationService {
     private readonly walletModel: Model<WalletDocument>,
 
     private readonly jwtService: JwtService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 private isAtLeast18(dateOfBirth: Date): boolean {
   const today = new Date();
@@ -93,6 +96,28 @@ async register(body: RegisterDto) {
     code,
     expiresAt: this.getOtpExpirationDate(),
   });
+
+
+  
+
+await this.notificationsService.createNotification(
+  user._id,
+  user.email,
+  user.name,
+  NotificationType.OTP_DELIVERY,
+  'OTP sent',
+  'Your OTP verification code has been sent successfully.',
+  `<html>
+    <body>
+      <h2>Your OTP Code</h2>
+      <p>Your OTP verification code is:</p>
+      <h1>${code}</h1>
+      <p>This code will expire soon in 10min</p>
+    </body>
+  </html>`,
+);
+
+
 
   return {
     message: 'Registration created successfully. OTP sent to email',
@@ -225,6 +250,8 @@ async register(body: RegisterDto) {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
+      if (user.identityVerificationStatus ==IdentityVerificationStatus.PENDING ||user.identityVerificationStatus == IdentityVerificationStatus.REJECTED) {
+         throw new ForbiddenException('Your identity isnt verified');}
 
       if (user.status == UserStatus.PENDING ||user.status == UserStatus.SUSPENDED) {
         throw new ForbiddenException('Your account is not allowed to login');

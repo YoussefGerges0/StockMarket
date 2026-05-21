@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -11,7 +11,8 @@ import { StocksModule } from './stocks/stocks.module';
 import { WalletModule } from './wallet/wallet.module';
 import { OrdersModule } from './orders/orders.module';
 import { AnalyticsModule } from './analytics/analytics.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { SeedModule } from './seed/seed.module';
 function validateConfig(config: Record<string, unknown>) {
   if (!config.MONGO_URI) {
     throw new Error('MONGO_URI is required');
@@ -35,6 +36,7 @@ function validateConfig(config: Record<string, unknown>) {
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validateConfig,
@@ -48,6 +50,27 @@ function validateConfig(config: Record<string, unknown>) {
       }),
     }),
 
+
+     ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => [
+        {
+          name: 'auth_ip',
+          ttl: Number(configService.get<string>('AUTH_IP_TTL')),
+          limit: Number(configService.get<string>('AUTH_IP_LIMIT')),
+        },
+        {
+          name: 'auth_user',
+          ttl: Number(configService.get<string>('AUTH_USER_TTL')),
+          limit: Number(configService.get<string>('AUTH_USER_LIMIT')),
+        },
+      ],
+    }),
+    
+
+    
+
     UsersModule,
     AuthenticationModule,
     PortfolioModule,
@@ -55,6 +78,7 @@ function validateConfig(config: Record<string, unknown>) {
     WalletModule,
     OrdersModule,
     AnalyticsModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
