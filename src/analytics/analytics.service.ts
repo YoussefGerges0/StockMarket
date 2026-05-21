@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types } from 'mongoose';
 import {Order,OrderDocument,OrderStatus} from '../orders/schemas/order.schema';
@@ -6,6 +7,7 @@ import { Wallet, WalletDocument } from '../wallet/schemas/wallet.schema';
 import {PortfolioPosition,PortfolioPositionDocument} from '../portfolio/schemas/portfolio.schema';
 import { User, UserDocument, UserRole } from '../users/schemas/user.schema';
 import {WalletTransaction,WalletTransactionDocument,WalletTransactionStatus,WalletTransactionType} from '../wallet/schemas/wallet-transaction.schema';
+import {NegativeWalletAlert,NegativeWalletAlertDocument} from './schemas/negative-wallet-alert.schema';
 type Granularity = 'day' | 'month';
 
 @Injectable()
@@ -17,6 +19,7 @@ constructor(
   @InjectModel(PortfolioPosition.name)private readonly portfolioPositionModel: Model<PortfolioPositionDocument>,
   @InjectModel(User.name)private readonly userModel: Model<UserDocument>,
   @InjectModel(WalletTransaction.name)private readonly walletTransactionModel: Model<WalletTransactionDocument>,
+  @InjectModel(NegativeWalletAlert.name)private readonly negativeWalletAlertModel: Model<NegativeWalletAlertDocument>,
  ) {}
 
 
@@ -539,6 +542,79 @@ const pipeline: PipelineStage[] = [
 
   return this.walletTransactionModel.aggregate(pipeline).exec();
 }
+
+
+@Cron('0 0 * * *', {
+  timeZone: 'Asia/Beirut',
+})
+async refreshNegativeWalletAlerts() {
+  const refreshedAt = new Date();
+
+  const pipeline: PipelineStage[] = [
+    {
+      $match: {
+        balance: {
+          $lt: 0,
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'memberData',
+      },
+    },
+    {
+      $unwind: '$memberData',
+    },
+    {
+      $project: {
+        _id: 0,
+        member: '$memberData._id',
+        displayName: '$memberData.name',
+        email: '$memberData.email',
+        walletBalance: '$balance',
+        refreshedAt: {
+          $literal: refreshedAt,
+        },
+      },
+    },
+    {
+      $sort: {
+        walletBalance: 1,
+      },
+    },
+  ];
+
+  const negativeWallets = await this.walletModel.aggregate(pipeline).exec();
+
+  await this.negativeWalletAlertModel.deleteMany({});
+
+  if (negativeWallets.length > 0) {
+    await this.negativeWalletAlertModel.insertMany(negativeWallets);
+  }
+
+  return {
+    message: 'Negative wallet alerts refreshed successfully',
+    totalAlerts: negativeWallets.length,
+  };
+}
+
+async getNegativeWalletAlerts() {
+  const alerts = await this.negativeWalletAlertModel
+    .find()
+    .sort({
+      walletBalance: 1,
+    });
+
+  return {
+    totalAlerts: alerts.length,
+    alerts,
+  };
+}
+
 }
 
 

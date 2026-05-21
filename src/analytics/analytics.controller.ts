@@ -24,6 +24,7 @@ export class AnalyticsController {
   ) {
     return this.analyticsService.getVolume(stockId,granularity,from,to);
   }
+  
 @Roles(UserRole.SADMIN,UserRole.ADMIN,UserRole.ANALYST)
   @Get('stocks/top')
 getTopTradedStocks(
@@ -70,5 +71,11 @@ getMembersGrowth() {
 @Get('withdrawals/pending')
 getPendingWithdrawalsCount() {
   return this.analyticsService.getPendingWithdrawalsCount();
+}
+
+
+@Get('alerts/negative-wallets')
+getNegativeWalletAlerts() {
+  return this.analyticsService.getNegativeWalletAlerts();
 }
 }
