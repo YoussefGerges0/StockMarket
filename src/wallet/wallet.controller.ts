@@ -26,7 +26,13 @@ import { AdjustWalletDto } from './dto/adjust-wallet.dto';
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
-
+  @Roles(UserRole.SADMIN, UserRole.ADMIN)
+@Get('transactions/adjustments')
+getAdjustmentTransactions(
+  @Req() req: { user: { sub: string; email: string; role: string } },
+) {
+  return this.walletService.getAdjustmentTransactions(req.user);
+}
 
   @Roles(UserRole.SADMIN, UserRole.ADMIN, UserRole.SUPPORT)
   @Get('pending')
@@ -38,7 +44,7 @@ getPendingWithdrawals(
 
 
 @Roles(UserRole.SADMIN, UserRole.ADMIN, UserRole.SUPPORT)
-@Patch('withdrawals/:transactionId/status')
+@Patch('status/:transactionId')
 updateWithdrawalStatus(
   @Param('transactionId', ParseObjectIdPipe) transactionId: Types.ObjectId,
   @Body() body: UpdateWithdrawalStatusDto,
@@ -101,6 +107,9 @@ adjustWalletBalance(
   ) {
     return this.walletService.getUserTransactions(userId, req.user, from, to);
   }
+
+
+
 
 
 }
