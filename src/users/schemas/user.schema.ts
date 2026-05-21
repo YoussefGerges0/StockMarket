@@ -5,10 +5,10 @@ export type UserDocument = HydratedDocument<User>;
 
 export enum UserRole {
   SADMIN="Super-Administrator",
-  ADMIN = 'Administrator',
-  ANALYST = 'Analyst',
-  SUPPORT = 'Support Agent',
-  INVESTOR = 'Investor',
+  ADMIN = 'administrator',
+  ANALYST = 'analyst',
+  SUPPORT = 'support-agent',
+  INVESTOR = 'investor',
 }
 
 export enum UserStatus {
@@ -38,10 +38,10 @@ export class User {
   email!: string;
 
   @Prop({ type: String, trim: true })
-  nationalID!: string;
+  nationalID!: string |null;
 
   @Prop({ type: Date, default: null })
-  dateOfBirth?: Date | null;
+  dateOfBirth!: Date | null;
 
   @Prop({ type: String, default: null })
   password!: string;
@@ -64,8 +64,6 @@ export class User {
   })
   identityVerificationStatus!: IdentityVerificationStatus;
 
-  @Prop({ type: String, default: null })
-  identityRejectionReason!: string;
 
   @Prop({ type: [String], default: [] })
   suspensionReason!: string[];
@@ -87,7 +85,13 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.index({ email: 1 }, { unique: true });
-UserSchema.index({ nationalID: 1 }, { unique: true, sparse: true });
+UserSchema.index({ nationalID: 1 },{unique: true,partialFilterExpression: {
+    nationalID: {
+        $type: 'string',
+      }
+    }
+  }
+);
 UserSchema.index({ status: 1 });
 UserSchema.index({ createdAt: -1 });
 UserSchema.index({ role: 1, status: 1 });
