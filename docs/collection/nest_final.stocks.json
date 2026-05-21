@@ -1,0 +1,68 @@
+[{
+  "_id": {
+    "$oid": "6a0b6f7d043098c9017007b2"
+  },
+  "ticker": "AAPL",
+  "companyName": "apple",
+  "sector": "technology",
+  "currentPrice": 10,
+  "description": "apple stock",
+  "isListed": false,
+  "createdAt": {
+    "$date": "2026-05-18T19:58:53.285Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T03:40:24.230Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "companyName": "amazon",
+  "sector": "technology",
+  "currentPrice": 150,
+  "description": "amazon",
+  "isListed": true,
+  "createdAt": {
+    "$date": "2026-05-18T20:00:18.437Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:41:06.155Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0b704a043098c9017007b4"
+  },
+  "ticker": "CCNA",
+  "companyName": "cisco",
+  "sector": "technology",
+  "currentPrice": 21,
+  "description": "cisco",
+  "isListed": false,
+  "createdAt": {
+    "$date": "2026-05-18T20:02:18.307Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:02:18.307Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0e7bebc042ec3db9f1b2bd"
+  },
+  "ticker": "QWE",
+  "companyName": "qwerty",
+  "sector": "technology",
+  "currentPrice": 7,
+  "description": "qwerty keyboard",
+  "isListed": true,
+  "createdAt": {
+    "$date": "2026-05-21T03:28:43.664Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T03:28:43.664Z"
+  }
+}]

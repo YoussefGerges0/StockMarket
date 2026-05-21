@@ -1,0 +1,334 @@
+[{
+  "_id": {
+    "$oid": "6a0a910e9df0f6a3881f2c61"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "deposit",
+  "amount": 50,
+  "status": "completed",
+  "description": "Wallet deposit",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-18T04:09:50.811Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T04:09:50.811Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0b7344043098c9017007b7"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "buy",
+  "amount": 15,
+  "status": "completed",
+  "description": "Bought 1 shares of AWS",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:15:00.477Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:15:00.477Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0b7383043098c9017007b9"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "buy",
+  "amount": 15,
+  "status": "completed",
+  "description": "Bought 1 shares of AWS",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:16:03.272Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:16:03.272Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0b749c043098c9017007bc"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "buy",
+  "amount": 11,
+  "status": "completed",
+  "description": "Bought 1 shares of AWS",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-18T20:20:44.967Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:20:44.967Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0bc885591d7e001309220a"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "deposit",
+  "amount": 2,
+  "status": "completed",
+  "description": "Wallet deposit",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-19T02:18:45.288Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-19T02:18:45.288Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0bc8f2591d7e001309220b"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "deposit",
+  "amount": 2,
+  "status": "completed",
+  "description": "Wallet deposit",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-19T02:20:34.555Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-19T02:20:34.555Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0bc904591d7e001309220c"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "withdrawal",
+  "amount": 3,
+  "status": "pending",
+  "description": "Withdrawal request pending CMS approval",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-19T02:20:52.068Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-19T02:20:52.068Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0d80ac302cb9a89837e8c8"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "wallet": {
+    "$oid": "6a0a8d609df0f6a3881f2c60"
+  },
+  "type": "deposit",
+  "amount": 50,
+  "status": "completed",
+  "description": "Deposit approved",
+  "reviewedBy": {
+    "$oid": "6a0d65349f87c112d71fc7f6"
+  },
+  "reviewedAt": {
+    "$date": "2026-05-20T09:42:58.921Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-20T09:36:44.512Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-20T09:42:59.852Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0e78efc042ec3db9f1b2bc"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "wallet": {
+    "$oid": "6a0e77f3904f7810d9f9a507"
+  },
+  "type": "adjustment",
+  "amount": 12,
+  "status": "completed",
+  "description": "u won",
+  "reviewedBy": {
+    "$oid": "6a0d65349f87c112d71fc7f6"
+  },
+  "reviewedAt": {
+    "$date": "2026-05-21T03:15:59.283Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-21T03:15:59.286Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T03:15:59.286Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0e9a081a946beb63896333"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "wallet": {
+    "$oid": "6a0e77f3904f7810d9f9a507"
+  },
+  "type": "deposit",
+  "amount": 12,
+  "status": "pending",
+  "description": "Deposit request pending CMS approval",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T05:37:12.194Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T05:37:12.194Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0e9a791a946beb63896334"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "wallet": {
+    "$oid": "6a0e77f3904f7810d9f9a507"
+  },
+  "type": "withdrawal",
+  "amount": 5,
+  "status": "pending",
+  "description": "Withdrawal request pending CMS approval",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T05:39:05.350Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T05:39:05.350Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eaf22e0cc5f74a11618e1"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "wallet": {
+    "$oid": "6a0e77f3904f7810d9f9a507"
+  },
+  "type": "buy",
+  "amount": 7,
+  "status": "completed",
+  "description": "Bought 1 shares of QWE",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:07:14.302Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:07:14.302Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eaf8ce0cc5f74a11618e4"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "wallet": {
+    "$oid": "6a0e77f3904f7810d9f9a507"
+  },
+  "type": "sell",
+  "amount": 7,
+  "status": "completed",
+  "description": "Sold 1 shares of QWE",
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "createdAt": {
+    "$date": "2026-05-21T07:09:00.675Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:09:00.675Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eb5a0e0cc5f74a11618ed"
+  },
+  "user": {
+    "$oid": "6a0eb1e8e0cc5f74a11618e9"
+  },
+  "wallet": {
+    "$oid": "6a0eb275e0cc5f74a11618ec"
+  },
+  "type": "deposit",
+  "amount": 12,
+  "status": "completed",
+  "description": "Deposit approved",
+  "reviewedBy": {
+    "$oid": "6a0d65349f87c112d71fc7f6"
+  },
+  "reviewedAt": {
+    "$date": "2026-05-21T07:37:16.770Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-21T07:34:56.463Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:37:19.205Z"
+  }
+}]

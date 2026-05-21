@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$oid": "6a0b7344043098c9017007b5"
+  },
+  "user": {
+    "$oid": "6a0a8c839df0f6a3881f2c5d"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "quantity": 3,
+  "averageBuyPrice": 13.666666666666666,
+  "totalInvested": 41,
+  "createdAt": {
+    "$date": "2026-05-18T20:15:00.470Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:20:44.952Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eaf22e0cc5f74a11618df"
+  },
+  "user": {
+    "$oid": "6a0e77f3904f7810d9f9a506"
+  },
+  "stock": {
+    "$oid": "6a0e7bebc042ec3db9f1b2bd"
+  },
+  "ticker": "QWE",
+  "quantity": 0,
+  "averageBuyPrice": 7,
+  "totalInvested": 0,
+  "createdAt": {
+    "$date": "2026-05-21T07:07:14.295Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:09:00.665Z"
+  }
+}]
