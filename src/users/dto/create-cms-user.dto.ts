@@ -1,4 +1,4 @@
-import { IsEmail,IsIn, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail,IsIn, IsEnum, IsNotEmpty, IsString, MinLength, IsLowercase } from 'class-validator';
 import { UserRole } from '../schemas/user.schema';
 
 export class CreateCmsUserDto {
@@ -9,6 +9,7 @@ export class CreateCmsUserDto {
   @IsEmail()
   email!: string;
 
+  @IsLowercase()
   @IsIn([UserRole.ADMIN, UserRole.ANALYST, UserRole.SUPPORT])
   role!: UserRole.ADMIN | UserRole.ANALYST | UserRole.SUPPORT;
 
