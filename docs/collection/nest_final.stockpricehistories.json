@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$oid": "6a0b743f043098c9017007ba"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "oldPrice": 15,
+  "newPrice": 11,
+  "changedBy": null,
+  "changedAt": {
+    "$date": "2026-05-18T20:19:11.587Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-18T20:19:11.587Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-18T20:19:11.587Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6a0eb712e0cc5f74a11618f0"
+  },
+  "stock": {
+    "$oid": "6a0b6fd2043098c9017007b3"
+  },
+  "ticker": "AWS",
+  "oldPrice": 11,
+  "newPrice": 150,
+  "changedBy": null,
+  "changedAt": {
+    "$date": "2026-05-21T07:41:06.163Z"
+  },
+  "createdAt": {
+    "$date": "2026-05-21T07:41:06.164Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-21T07:41:06.164Z"
+  }
+}]
